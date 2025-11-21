@@ -87,8 +87,8 @@ const societies = [
     subtitle: "50th Echoes of Eternity",
     logo: "/society-logos/images-4.png",
     fallbackIcon: "🎭",
-    color: "from-purple-500/20 to-indigo-500/20", // Changed from yellow to purple
-    borderColor: "border-purple-500/30", // Changed from yellow to purple
+    color: "from-purple-500/20 to-indigo-500/20",
+    borderColor: "border-purple-500/30",
   },
   {
     id: "food-festival",
@@ -142,7 +142,7 @@ const SocietyDashboard = () => {
 
   const handleSocietyClick = (societyId: string) => {
     if (societyId === "saturnalia") {
-      // Directly open the HTML file for Saturnalia
+      // Direct link to the HTML file in public folder
       window.open('/sat.html', '_blank');
     } else {
       navigate(`/dashboard/society/${societyId}`);
