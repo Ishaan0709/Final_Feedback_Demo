@@ -83,7 +83,7 @@ const TeacherDashboard = () => {
               <p className="text-lg font-semibold">Mentor Command</p>
             </div>
           </div>
-          <Button variant="outline" className="border-white/30 text-white" onClick={() => navigate("/")}>
+          <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/30" onClick={() => navigate("/")}>
             Exit studio
           </Button>
         </div>
@@ -124,10 +124,10 @@ const TeacherDashboard = () => {
             </div>
           </Card>
 
-          <Card className="border-white/10 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 p-8 text-white shadow-2xl shadow-primary/20">
+          <Card className="border-white/10 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 p-8 text-slate-900 shadow-2xl shadow-primary/20">
             <div className="flex items-center gap-3">
               <Shield className="h-6 w-6 text-emerald-300" />
-              <p className="text-sm uppercase tracking-[0.4em] text-white/70">Signal shield</p>
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-700">Signal shield</p>
             </div>
             <h2 className="mt-4 text-3xl font-semibold">Live sentiment radar</h2>
             <div className="mt-6 space-y-4">
@@ -138,11 +138,11 @@ const TeacherDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Icon className={`h-4 w-4 ${slice.color}`} />
-                        <p className="text-sm text-white/70">{slice.label}</p>
+                        <p className="text-sm text-slate-700">{slice.label}</p>
                       </div>
                       <p className={`text-xl font-semibold ${slice.color}`}>{slice.value}%</p>
                     </div>
-                    <p className="text-xs text-white/60">{slice.detail}</p>
+                    <p className="text-xs text-slate-600">{slice.detail}</p>
                     <Progress value={slice.value} className="mt-3 h-2 overflow-hidden rounded-full bg-white/10" />
                   </div>
                 );
@@ -200,10 +200,10 @@ const TeacherDashboard = () => {
             </div>
           </Card>
 
-          <Card className="border-white/10 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 p-8 text-white shadow-xl shadow-primary/20">
+          <Card className="border-white/10 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 p-8 text-slate-900 shadow-xl shadow-primary/20">
             <div className="flex items-center gap-3">
               <Target className="h-6 w-6 text-primary" />
-              <p className="text-sm uppercase tracking-[0.4em] text-white/70">Impact tracker</p>
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-700">Impact tracker</p>
             </div>
             <div className="mt-6 space-y-4">
               {[
@@ -212,12 +212,12 @@ const TeacherDashboard = () => {
                 { label: "Mentor satisfaction", value: 85, note: "streak x5" },
               ].map((item) => (
                 <div key={item.label} className="rounded-2xl border border-white/15 bg-white/5 p-4">
-                  <div className="flex items-center justify-between text-sm text-white/70">
+                  <div className="flex items-center justify-between text-sm text-slate-700">
                     <span>{item.label}</span>
                     <span>{item.value}%</span>
                   </div>
                   <Progress value={item.value} className="mt-2 h-2 overflow-hidden rounded-full bg-white/10" />
-                  <p className="text-xs text-emerald-300">{item.note}</p>
+                  <p className="text-xs text-emerald-600">{item.note}</p>
                 </div>
               ))}
             </div>

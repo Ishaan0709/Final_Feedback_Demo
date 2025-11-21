@@ -1,9 +1,41 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 import { Award, Calendar, Flame, Megaphone, Music3, Plus, Sparkles, Star, Ticket, TrendingUp, Users } from "lucide-react";
+
+const SocietyLogo = ({ logo, name, fallbackIcon }: { logo: string; name: string; fallbackIcon: string }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  if (imageError) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <div className="text-6xl mb-2">{fallbackIcon}</div>
+        <div className="text-lg font-bold text-white">{name}</div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {!imageLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-4xl">{fallbackIcon}</div>
+        </div>
+      )}
+      <img 
+        src={logo} 
+        alt={name}
+        className={`w-full h-full object-contain ${imageLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        onError={() => setImageError(true)}
+        onLoad={() => setImageLoaded(true)}
+      />
+    </>
+  );
+};
 
 const communityStats = [
   { label: "Events staged", value: "15", detail: "9 campuses", icon: Calendar },
@@ -48,6 +80,63 @@ const collabTracks = [
   { title: "Hybrid event mesh", detail: "Dual-stream watch parties across campuses", badge: "3 cities lit" },
 ];
 
+const societies = [
+  {
+    id: "saturnalia",
+    name: "Saturnalia",
+    subtitle: "50th Echoes of Eternity",
+    logo: "/society-logos/images-4.png",
+    fallbackIcon: "🎭",
+    color: "from-yellow-500/20 to-amber-500/20",
+    borderColor: "border-yellow-500/30",
+  },
+  {
+    id: "food-festival",
+    name: "Food Festival",
+    subtitle: "Flavoured Illusions",
+    logo: "/society-logos/images-3.jpeg",
+    fallbackIcon: "🍕",
+    color: "from-pink-500/20 to-rose-500/20",
+    borderColor: "border-pink-500/30",
+  },
+  {
+    id: "ieee",
+    name: "IEEE",
+    subtitle: "Thapar Chapter",
+    logo: "/society-logos/45298983.png",
+    fallbackIcon: "⚡",
+    color: "from-blue-500/20 to-indigo-500/20",
+    borderColor: "border-blue-500/30",
+  },
+  {
+    id: "iste",
+    name: "ISTE",
+    subtitle: "Thapar Chapter",
+    logo: "/society-logos/images-5.png",
+    fallbackIcon: "🔬",
+    color: "from-indigo-500/20 to-blue-500/20",
+    borderColor: "border-indigo-500/30",
+  },
+  {
+    id: "microsoft-ambassador",
+    name: "Microsoft Learn",
+    subtitle: "Student Ambassador",
+    logo: "/society-logos/1722854995324.jpeg",
+    fallbackIcon: "💻",
+    color: "from-cyan-500/20 to-blue-500/20",
+    borderColor: "border-cyan-500/30",
+  },
+  {
+    id: "acm",
+    name: "ACM",
+    subtitle: "Thapar Chapter",
+    logo: "/society-logos/images-6.png",
+    fallbackIcon: "💡",
+    color: "from-sky-500/20 to-cyan-500/20",
+    borderColor: "border-sky-500/30",
+  },
+];
+
 const SocietyDashboard = () => {
   const navigate = useNavigate();
 
@@ -66,7 +155,7 @@ const SocietyDashboard = () => {
               <p className="text-lg font-semibold">Society Control Room</p>
             </div>
           </div>
-          <Button variant="outline" className="border-white/30 text-white" onClick={() => navigate("/")}>
+          <Button className="rounded-full bg-gradient-to-r from-violet-500 to-purple-500 text-white hover:from-violet-600 hover:to-purple-600 shadow-lg shadow-violet-500/30" onClick={() => navigate("/")}>
             Exit stage
           </Button>
         </div>
@@ -113,6 +202,41 @@ const SocietyDashboard = () => {
           })}
         </section>
 
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-sm uppercase tracking-[0.4em] text-white/60">Campus Societies</p>
+              <h2 className="text-3xl font-semibold">Active Organizations</h2>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {societies.map((society) => (
+              <Card
+                key={society.id}
+                onClick={() => navigate(`/dashboard/society/${society.id}`)}
+                className="group cursor-pointer border-white/10 bg-gradient-to-br bg-white/5 p-6 text-white shadow-xl shadow-black/30 transition hover:-translate-y-2 hover:border-primary/60 hover:shadow-primary/20"
+              >
+                <div className="flex flex-col items-center text-center space-y-4">
+                  <div className={`rounded-2xl border-2 ${society.borderColor} bg-gradient-to-br ${society.color} p-4 w-full aspect-video flex items-center justify-center overflow-hidden relative`}>
+                    <SocietyLogo 
+                      logo={society.logo} 
+                      name={society.name}
+                      fallbackIcon={society.fallbackIcon}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <h3 className="text-xl font-semibold">{society.name}</h3>
+                    <p className="text-sm text-white/70 mt-1">{society.subtitle}</p>
+                  </div>
+                  <Button className="w-full rounded-full bg-gradient-to-r from-primary to-accent font-semibold shadow-lg shadow-primary/40 transition hover:-translate-y-1">
+                    View Events
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+
         <section className="grid gap-6 lg:grid-cols-[1.2fr,0.8fr]">
           <Card className="border-white/10 bg-white/5 p-8 text-white shadow-2xl shadow-secondary/20">
             <div className="flex items-center gap-3">
@@ -136,10 +260,10 @@ const SocietyDashboard = () => {
             </div>
           </Card>
 
-          <Card className="border-white/10 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 p-8 text-white shadow-xl shadow-primary/20">
+          <Card className="border-white/10 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 p-8 text-slate-900 shadow-xl shadow-primary/20">
             <div className="flex items-center gap-3">
               <Flame className="h-6 w-6 text-accent" />
-              <p className="text-sm uppercase tracking-[0.4em] text-white/70">Energy meter</p>
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-700">Energy meter</p>
             </div>
             <div className="mt-6 space-y-4">
               {[
@@ -148,12 +272,12 @@ const SocietyDashboard = () => {
                 { label: "Sponsor pings", value: 9, note: "ready decks" },
               ].map((item) => (
                 <div key={item.label} className="rounded-2xl border border-white/15 bg-white/5 p-4">
-                  <div className="flex items-center justify-between text-sm text-white/70">
+                  <div className="flex items-center justify-between text-sm text-slate-700">
                     <span>{item.label}</span>
                     <span>{item.value}</span>
                   </div>
                   <Progress value={Math.min(item.value, 100)} className="mt-2 h-2 overflow-hidden rounded-full bg-white/10" />
-                  <p className="text-xs text-emerald-300">{item.note}</p>
+                  <p className="text-xs text-emerald-600">{item.note}</p>
                 </div>
               ))}
             </div>
@@ -212,10 +336,10 @@ const SocietyDashboard = () => {
             </div>
           </Card>
 
-          <Card className="border-white/10 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 p-8 text-white shadow-xl shadow-primary/20">
+          <Card className="border-white/10 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 p-8 text-slate-900 shadow-xl shadow-primary/20">
             <div className="flex items-center gap-3">
               <Award className="h-6 w-6 text-primary" />
-              <p className="text-sm uppercase tracking-[0.4em] text-white/70">Collab playbooks</p>
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-700">Collab playbooks</p>
             </div>
             <div className="mt-6 space-y-4">
               {collabTracks.map((item) => (
@@ -225,9 +349,9 @@ const SocietyDashboard = () => {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold">{item.title}</h3>
-                    <Badge className="border-none bg-white/15 text-xs text-white/80">{item.badge}</Badge>
+                    <Badge className="border-none bg-white/15 text-xs text-slate-700">{item.badge}</Badge>
                   </div>
-                  <p className="text-sm text-white/70">{item.detail}</p>
+                  <p className="text-sm text-slate-700">{item.detail}</p>
                 </div>
               ))}
             </div>

@@ -73,7 +73,7 @@ const StudentDashboard = () => {
               <p className="text-lg font-semibold">Student Arena</p>
             </div>
           </div>
-          <Button variant="outline" className="border-white/30 text-white" onClick={() => navigate("/")}>
+          <Button className="rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 shadow-lg shadow-rose-500/30" onClick={() => navigate("/")}>
             Exit arena
           </Button>
         </div>
@@ -114,17 +114,17 @@ const StudentDashboard = () => {
             </div>
           </Card>
 
-          <Card className="border-white/10 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 p-8 text-white shadow-2xl shadow-primary/20">
+          <Card className="border-white/10 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 p-8 text-slate-900 shadow-2xl shadow-primary/20">
             <div className="flex items-center gap-3">
               <Flame className="h-6 w-6 text-accent" />
-              <p className="text-sm uppercase tracking-[0.4em] text-white/70">Streak reactor</p>
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-700">Streak reactor</p>
             </div>
             <h2 className="mt-4 text-3xl font-semibold">11-day streak alive</h2>
-            <p className="text-white/70">Keep daily responses rolling to double your XP multiplier.</p>
+            <p className="text-slate-700">Keep daily responses rolling to double your XP multiplier.</p>
             <div className="mt-8 grid gap-4">
               {[72, 84, 96].map((value, idx) => (
                 <div key={idx} className="rounded-2xl border border-white/15 bg-white/5 p-4">
-                  <div className="flex items-center justify-between text-sm text-white/70">
+                  <div className="flex items-center justify-between text-sm text-slate-700">
                     <span>{`Squad ${idx + 1}`}</span>
                     <span>{value}% sync</span>
                   </div>

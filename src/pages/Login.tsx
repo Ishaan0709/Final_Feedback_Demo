@@ -117,7 +117,7 @@ const Login = () => {
                   <p className="text-sm text-white/70">Logging in as</p>
                   <p className="text-2xl font-semibold capitalize">{selectedRole}</p>
                 </div>
-                <Button variant="outline" className="border-white/30 text-white" onClick={() => setSelectedRole(null)}>
+                <Button className="rounded-full bg-gradient-to-r from-primary to-accent text-white hover:from-primary/90 hover:to-accent/90 shadow-lg shadow-primary/30" onClick={() => setSelectedRole(null)}>
                   Switch role
                 </Button>
               </div>
