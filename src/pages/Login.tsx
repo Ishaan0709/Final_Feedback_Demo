@@ -4,112 +4,192 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, GraduationCap, BookOpen, Users } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, Shield, Sparkles, Trophy, Users } from "lucide-react";
+
+const roleCards = [
+  {
+    key: "student" as const,
+    title: "Student",
+    badge: "XP Hunter",
+    description: "Daily streaks, pulse polls & badge drops",
+    icon: GraduationCap,
+    accent: "from-primary/50 to-emerald-400/50",
+  },
+  {
+    key: "teacher" as const,
+    title: "Teacher",
+    badge: "Insight Maestro",
+    description: "AI summaries, heatmaps & coaching loops",
+    icon: BookOpen,
+    accent: "from-amber-400/60 to-pink-500/50",
+  },
+  {
+    key: "society" as const,
+    title: "Society / Event",
+    badge: "Hype Chief",
+    description: "Live leaderboards & sponsor-ready decks",
+    icon: Users,
+    accent: "from-violet-500/60 to-indigo-400/60",
+  },
+];
+
+const boostStats = [
+  { label: "Avg. login streak", value: "17 days", detail: "top cohorts" },
+  { label: "XP minted today", value: "82k", detail: "across roles" },
+  { label: "Hackathons won", value: "9", detail: "with Flow decks" },
+];
 
 const Login = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<"student" | "teacher" | "society" | null>(null);
 
   const handleLogin = (role: string) => {
-    // Frontend only - navigate to dashboard
     navigate(`/dashboard/${role}`);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 space-y-6 border-2">
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="h-10 w-10 text-primary" />
-            <span className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              FeedbackFlow
-            </span>
+    <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white">
+      <div className="hero-grid absolute inset-0 opacity-70" />
+      <div className="glowing-orb absolute -top-32 left-10" />
+      <div className="glowing-orb absolute bottom-0 right-0 delay-[1500ms]" />
+
+      <div className="relative z-10 mx-auto grid min-h-screen max-w-6xl grid-cols-1 gap-8 px-6 py-12 lg:grid-cols-[1.1fr,0.9fr]">
+        <Card className="border-white/10 bg-white/5 p-8 text-white shadow-2xl shadow-primary/20">
+          <div className="flex items-center gap-3">
+            <Sparkles className="h-8 w-8 text-primary" />
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-white/60">FeedbackFlow</p>
+              <h1 className="text-3xl font-semibold">Mission Login</h1>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold">Welcome Back!</h1>
-          <p className="text-muted-foreground">Choose your role to continue</p>
-        </div>
+          <p className="mt-4 text-white/70">
+            Pick your role, charge up your dashboard, and sync live with campus squads. Every login keeps your streak blazing.
+          </p>
 
-        {!selectedRole ? (
-          <div className="grid gap-4">
-            <Button
-              onClick={() => setSelectedRole("student")}
-              variant="outline"
-              className="h-24 flex-col gap-2 border-2 hover:border-primary hover:bg-primary/5"
-            >
-              <GraduationCap className="h-8 w-8 text-primary" />
-              <span className="text-lg font-semibold">Student</span>
-            </Button>
-
-            <Button
-              onClick={() => setSelectedRole("teacher")}
-              variant="outline"
-              className="h-24 flex-col gap-2 border-2 hover:border-accent hover:bg-accent/5"
-            >
-              <BookOpen className="h-8 w-8 text-accent" />
-              <span className="text-lg font-semibold">Teacher</span>
-            </Button>
-
-            <Button
-              onClick={() => setSelectedRole("society")}
-              variant="outline"
-              className="h-24 flex-col gap-2 border-2 hover:border-secondary hover:bg-secondary/5"
-            >
-              <Users className="h-8 w-8 text-secondary" />
-              <span className="text-lg font-semibold">Society / Event Head</span>
-            </Button>
+          <div className="mt-8 grid gap-4">
+            {roleCards.map((role) => {
+              const Icon = role.icon;
+              const active = selectedRole === role.key;
+              return (
+                <button
+                  key={role.key}
+                  onClick={() => setSelectedRole(role.key)}
+                  className={`group flex w-full items-center justify-between rounded-3xl border px-5 py-4 text-left transition ${
+                    active ? "border-primary/70 bg-white/10 shadow-lg shadow-primary/30" : "border-white/10 bg-white/5 hover:border-primary/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="rounded-2xl border border-white/10 bg-white/10 p-3 text-primary">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xl font-semibold">{role.title}</p>
+                        <Badge className="rounded-full border-none bg-white/15 text-xs text-white/80">{role.badge}</Badge>
+                      </div>
+                      <p className="text-sm text-white/70">{role.description}</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-white/60 transition group-hover:translate-x-1" />
+                </button>
+              );
+            })}
           </div>
-        ) : (
-          <div className="space-y-6">
-            <Button
-              onClick={() => setSelectedRole(null)}
-              variant="ghost"
-              className="w-full"
-            >
-              ← Back to role selection
-            </Button>
 
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {boostStats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                <p className="text-xs uppercase tracking-widest text-white/60">{stat.label}</p>
+                <p className="mt-2 text-xl font-semibold">{stat.value}</p>
+                <p className="text-xs text-white/60">{stat.detail}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
 
-              <TabsContent value="login" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="your@email.com" />
+        <Card className="border-white/10 bg-white/5 p-8 text-white shadow-2xl shadow-primary/30">
+          {selectedRole ? (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-white/70">Logging in as</p>
+                  <p className="text-2xl font-semibold capitalize">{selectedRole}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" placeholder="••••••••" />
-                </div>
-                <Button onClick={() => handleLogin(selectedRole)} className="w-full font-semibold">
-                  Login as {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+                <Button variant="outline" className="border-white/30 text-white" onClick={() => setSelectedRole(null)}>
+                  Switch role
                 </Button>
-              </TabsContent>
+              </div>
 
-              <TabsContent value="signup" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" placeholder="John Doe" />
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-white/10">
+                  <TabsTrigger value="login">Login</TabsTrigger>
+                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="login" className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-white/80">
+                      Email
+                    </Label>
+                    <Input id="email" type="email" placeholder="you@campus.edu" className="border-white/20 bg-black/20 text-white placeholder:text-white/40" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-white/80">
+                      Password
+                    </Label>
+                    <Input id="password" type="password" placeholder="••••••••" className="border-white/20 bg-black/20 text-white placeholder:text-white/40" />
+                  </div>
+                  <Button className="w-full rounded-full bg-gradient-to-r from-primary to-accent font-semibold shadow-lg shadow-primary/40" onClick={() => handleLogin(selectedRole)}>
+                    Enter {selectedRole} arena
+                  </Button>
+                </TabsContent>
+
+                <TabsContent value="signup" className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-white/80">
+                      Full Name
+                    </Label>
+                    <Input id="name" placeholder="Avery Patel" className="border-white/20 bg-black/20 text-white placeholder:text-white/40" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email" className="text-white/80">
+                      Campus Email
+                    </Label>
+                    <Input id="signup-email" type="email" placeholder="you@campus.edu" className="border-white/20 bg-black/20 text-white placeholder:text-white/40" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password" className="text-white/80">
+                      Create Password
+                    </Label>
+                    <Input id="signup-password" type="password" placeholder="••••••••" className="border-white/20 bg-black/20 text-white placeholder:text-white/40" />
+                  </div>
+                  <Button className="w-full rounded-full bg-white/90 font-semibold text-slate-900 hover:bg-white" onClick={() => handleLogin(selectedRole)}>
+                    Create & jump in
+                  </Button>
+                </TabsContent>
+              </Tabs>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-primary" />
+                  SOC 2 ready · SSO friendly · Privacy-first
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input id="signup-email" type="email" placeholder="your@email.com" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input id="signup-password" type="password" placeholder="••••••••" />
-                </div>
-                <Button onClick={() => handleLogin(selectedRole)} className="w-full font-semibold">
-                  Create Account
-                </Button>
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
-      </Card>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6 text-center">
+              <Trophy className="mx-auto h-12 w-12 text-secondary" />
+              <h2 className="text-3xl font-semibold">Choose your avatar</h2>
+              <p className="text-white/70">Select a role to unlock the right controls, XP boosts, and dashboards.</p>
+              <Button className="rounded-full bg-white/90 text-slate-900" onClick={() => setSelectedRole("student")}>
+                Auto-pick Student Mode
+              </Button>
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 };
