@@ -427,6 +427,47 @@
         .mcq-option input {
             width: auto;
         }
+
+        /* New styles for the summary section */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(139, 95, 191, 0.2) 0%, rgba(107, 70, 193, 0.2) 100%);
+            border-left: 5px solid var(--accent);
+        }
+        
+        .summary-content {
+            line-height: 1.8;
+        }
+        
+        .summary-highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .summary-stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .summary-stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .summary-stat-label {
+            font-size: 0.9rem;
+            color: #CBD5E0;
+        }
         
         @media (max-width: 768px) {
             .header-content {
@@ -444,6 +485,10 @@
             
             .dashboard-stats {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -686,6 +731,17 @@
                 View insights and analytics from Saturnalia 2023 feedback. Accessible to all Thapar ID users.
             </p>
             
+            <!-- NEW: Summary Card -->
+            <div class="card summary-card">
+                <h3>Feedback Summary</h3>
+                <div class="summary-content" id="summary-content">
+                    <!-- Dynamic summary will be loaded here -->
+                </div>
+                <div class="summary-stats" id="summary-stats">
+                    <!-- Dynamic summary stats will be loaded here -->
+                </div>
+            </div>
+            
             <div class="dashboard-stats" id="stats-container">
                 <!-- Stats will be loaded here -->
             </div>
@@ -734,12 +790,12 @@
     <script>
         // Sample data - in a real app, this would come from a backend
         let feedbackData = [
-            { rating: 5, enjoyment: "The music concerts were amazing! Especially the EDM night.", improvement: "Better food options would be great", likelihood: "very-likely", sentiment: "positive", date: "2023-11-11", user: "student1@thapar.edu", recommend: "yes" },
-            { rating: 4, enjoyment: "Loved the dance competitions and cultural events", improvement: "More seating arrangements needed", likelihood: "likely", sentiment: "positive", date: "2023-11-11", user: "student2@thapar.edu", recommend: "yes" },
-            { rating: 3, enjoyment: "Good variety of events", improvement: "Event scheduling could be better", likelihood: "neutral", sentiment: "neutral", date: "2023-11-11", user: "student3@thapar.edu", recommend: "maybe" },
-            { rating: 5, enjoyment: "The technical events were very engaging and well-organized", improvement: "Communication about venue changes", likelihood: "very-likely", sentiment: "positive", date: "2023-11-12", user: "student4@thapar.edu", recommend: "yes" },
-            { rating: 2, enjoyment: "Some good performances", improvement: "Poor crowd management and long queues", likelihood: "unlikely", sentiment: "negative", date: "2023-11-12", user: "student5@thapar.edu", recommend: "no" },
-            { rating: 4, enjoyment: "The food festival had amazing variety", improvement: "More water stations needed", likelihood: "likely", sentiment: "positive", date: "2023-11-13", user: "student6@thapar.edu", recommend: "yes" }
+            { rating: 5, enjoyment: "The music concerts were amazing! Especially the EDM night.", improvement: "Better food options would be great", likelihood: "very-likely", sentiment: "positive", date: "2023-11-11", user: "student1@thapar.edu", recommend: "yes", enjoyedEvents: ["music", "dance"], improvementAreas: ["food"] },
+            { rating: 4, enjoyment: "Loved the dance competitions and cultural events", improvement: "More seating arrangements needed", likelihood: "likely", sentiment: "positive", date: "2023-11-11", user: "student2@thapar.edu", recommend: "yes", enjoyedEvents: ["dance", "cultural"], improvementAreas: ["venue"] },
+            { rating: 3, enjoyment: "Good variety of events", improvement: "Event scheduling could be better", likelihood: "neutral", sentiment: "neutral", date: "2023-11-11", user: "student3@thapar.edu", recommend: "maybe", enjoyedEvents: ["tech"], improvementAreas: ["organization"] },
+            { rating: 5, enjoyment: "The technical events were very engaging and well-organized", improvement: "Communication about venue changes", likelihood: "very-likely", sentiment: "positive", date: "2023-11-12", user: "student4@thapar.edu", recommend: "yes", enjoyedEvents: ["tech", "cultural"], improvementAreas: ["organization"] },
+            { rating: 2, enjoyment: "Some good performances", improvement: "Poor crowd management and long queues", likelihood: "unlikely", sentiment: "negative", date: "2023-11-12", user: "student5@thapar.edu", recommend: "no", enjoyedEvents: ["music"], improvementAreas: ["crowd", "food"] },
+            { rating: 4, enjoyment: "The food festival had amazing variety", improvement: "More water stations needed", likelihood: "likely", sentiment: "positive", date: "2023-11-13", user: "student6@thapar.edu", recommend: "yes", enjoyedEvents: ["food", "music"], improvementAreas: ["venue"] }
         ];
 
         let charts = {};
@@ -871,6 +927,94 @@
             document.getElementById('feedback-form').reset();
         });
 
+        // NEW: Generate dynamic summary
+        function generateSummary() {
+            if (feedbackData.length === 0) {
+                return {
+                    content: "<p>No feedback data available yet. The summary will appear here once feedback is submitted.</p>",
+                    stats: ""
+                };
+            }
+
+            // Calculate key metrics
+            const totalResponses = feedbackData.length;
+            const avgRating = (feedbackData.reduce((sum, item) => sum + item.rating, 0) / totalResponses).toFixed(1);
+            const positiveCount = feedbackData.filter(item => item.sentiment === 'positive').length;
+            const negativeCount = feedbackData.filter(item => item.sentiment === 'negative').length;
+            const neutralCount = feedbackData.filter(item => item.sentiment === 'neutral').length;
+            const recommendYes = feedbackData.filter(item => item.recommend === 'yes').length;
+            const veryLikelyCount = feedbackData.filter(item => item.likelihood === 'very-likely').length;
+            
+            // Calculate percentages
+            const positivePercent = Math.round((positiveCount / totalResponses) * 100);
+            const recommendPercent = Math.round((recommendYes / totalResponses) * 100);
+            const veryLikelyPercent = Math.round((veryLikelyCount / totalResponses) * 100);
+            
+            // Find most enjoyed events
+            const eventCounts = {};
+            feedbackData.forEach(item => {
+                if (item.enjoyedEvents) {
+                    item.enjoyedEvents.forEach(event => {
+                        eventCounts[event] = (eventCounts[event] || 0) + 1;
+                    });
+                }
+            });
+            
+            const mostEnjoyedEvents = Object.entries(eventCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 2)
+                .map(([event, count]) => `${event} (${count})`)
+                .join(', ');
+                
+            // Find most common improvement areas
+            const improvementCounts = {};
+            feedbackData.forEach(item => {
+                if (item.improvementAreas) {
+                    item.improvementAreas.forEach(area => {
+                        improvementCounts[area] = (improvementCounts[area] || 0) + 1;
+                    });
+                }
+            });
+            
+            const topImprovementAreas = Object.entries(improvementCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 2)
+                .map(([area, count]) => `${area} (${count})`)
+                .join(', ');
+
+            // Generate summary text
+            let summaryText = `
+                <p>Based on <span class="summary-highlight">${totalResponses} feedback responses</span>, Saturnalia 2023 has received an average rating of <span class="summary-highlight">${avgRating}/5</span>. The event has been well-received with <span class="summary-highlight">${positivePercent}% positive sentiment</span>.</p>
+                <p>The most enjoyed events were <span class="summary-highlight">${mostEnjoyedEvents || 'N/A'}</span>, while participants suggested improvements in <span class="summary-highlight">${topImprovementAreas || 'N/A'}</span>.</p>
+                <p><span class="summary-highlight">${recommendPercent}% of respondents</span> would recommend Saturnalia to others, and <span class="summary-highlight">${veryLikelyPercent}% are very likely</span> to attend next year.</p>
+            `;
+
+            // Generate summary stats
+            const statsHTML = `
+                <div class="summary-stat">
+                    <div class="summary-stat-value">${avgRating}/5</div>
+                    <div class="summary-stat-label">Average Rating</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-stat-value">${positivePercent}%</div>
+                    <div class="summary-stat-label">Positive Feedback</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-stat-value">${recommendPercent}%</div>
+                    <div class="summary-stat-label">Would Recommend</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-stat-value">${veryLikelyPercent}%</div>
+                    <div class="summary-stat-label">Very Likely to Return</div>
+                </div>
+            `;
+
+            return {
+                content: summaryText,
+                stats: statsHTML
+            };
+        }
+
         // Load dashboard data
         function loadDashboard() {
             if (!isLoggedIn()) {
@@ -910,6 +1054,11 @@
                     <p>Would recommend</p>
                 </div>
             `;
+            
+            // NEW: Load summary
+            const summary = generateSummary();
+            document.getElementById('summary-content').innerHTML = summary.content;
+            document.getElementById('summary-stats').innerHTML = summary.stats;
             
             // Create charts
             createRatingChart();
